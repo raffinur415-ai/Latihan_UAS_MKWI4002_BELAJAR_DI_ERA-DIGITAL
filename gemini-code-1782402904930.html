@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Soal UAS MKWI4202</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #4B5563;
+            --success: #10B981;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        button.filter-btn {
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        button.filter-btn:hover, button.filter-btn.active {
+            background-color: var(--primary);
+            color: #fff;
+        }
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 5px solid var(--primary);
+        }
+        .quiz-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .question {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin: 0;
+        }
+        .module-badge {
+            display: inline-block;
+            background-color: #E0E7FF;
+            color: var(--primary);
+            font-size: 0.8em;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .answer {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #D1D5DB;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+        .answer.show {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hint {
+            font-size: 0.85em;
+            color: #9CA3AF;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Latihan Interaktif MKWI4202</h1>
+    <p class="subtitle">Klik pada kotak soal untuk melihat jawaban yang benar!</p>
+
+    <div class="filter-container" id="filter-container">
+        <button class="filter-btn active" onclick="filterBy(0)">Semua Modul</button>
+        <button class="filter-btn" onclick="filterBy(1)">Modul 1</button>
+        <button class="filter-btn" onclick="filterBy(2)">Modul 2</button>
+        <button class="filter-btn" onclick="filterBy(3)">Modul 3</button>
+        <button class="filter-btn" onclick="filterBy(4)">Modul 4</button>
+        <button class="filter-btn" onclick="filterBy(5)">Modul 5</button>
+        <button class="filter-btn" onclick="filterBy(6)">Modul 6</button>
+        <button class="filter-btn" onclick="filterBy(7)">Modul 7</button>
+        <button class="filter-btn" onclick="filterBy(8)">Modul 8</button>
+        <button class="filter-btn" onclick="filterBy(9)">Modul 9</button>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Cards will be generated here by JS -->
+    </div>
+</div>
+
+<script>
+    const dataSoal = [
+        // MODUL 1
+        {m: 1, q: "Di era digital, keunggulan kompetitif hanya dimiliki oleh perusahaan yang dapat memanfaatkan ....", a: "pengetahuan"},
+        {m: 1, q: "Dampak kebutuhan akan pekerja-pengetahuan (knowledge workers) yang meningkat di dunia industri akan memicu perguruan tinggi menghasilkan lulusan dalam jumlah yang ....", a: "lebih besar"},
+        {m: 1, q: "Ciri-ciri SDM berbasis pengetahuan adalah sebagai berikut kecuali ....", a: "bekerja di perusahaan besar"},
+        {m: 1, q: "Dalam masyarakat pengetahuan (knowledge society), membuat video singkat YouTube untuk menyampaikan gagasan untuk menjangkau audiens merupakan keterampilan ....", a: "komunikasi"},
+        {m: 1, q: "Di era pembelajaran digital, beberapa nilai esensial/inti (core values) dari perguruan tinggi perlu ....", a: "dipertahankan"},
+        {m: 1, q: "Salah satu respon perguruan tinggi terhadap kebutuhan akan lulusan pendidikan tinggi yang semakin meningkat adalah dengan menciptakan kelas-kelas ....", a: "kecil"},
+        {m: 1, q: "Strategi perguruan tinggi dalam mengelola kelas besar pada umumnya memberikan dampak yang cenderung ....", a: "negatif"},
+        {m: 1, q: "Sifat keberadaan teknologi pembelajaran di era digital terhadap kemunculan kelas besar adalah ....", a: "mempercepat"},
+        {m: 1, q: "Di era pembelajaran digital, perguruan tinggi perlu fokus pada metode pembelajaran yang membantu keberhasilan mahasiwa yang mengarah pada pendekatan ....", a: "individualiasasi belajar"},
+        {m: 1, q: "Salah satu alasan untuk kembali kuliah di era pembelajaran digital meskipun sudah bekerja pada umumnya adalah untuk ....", a: "mendukung karir"},
+        {m: 1, q: "Elemen-elemen ini adalah komponen dari konsep literasi digital dalam arti luas kecuali ....", a: "keterampilan belajar mandiri"},
+        {m: 1, q: "Literasi digital adalah seperangkat pengetahuan yang diperoleh dari praktek-praktek situasional di lingkungan yang penuh dengan perubahan teknologi dan pengetahuan tersebut bersifat ....", a: "akademis"},
+        {m: 1, q: "Literasi digital tidak hanya tentang penguasaan kemahiran teknis namun juga tentang pemahaman aspek-aspek di seputar penggunaan teknologi seperti ....", a: "norma-norma penggunaan teknologi digital"},
+        {m: 1, q: "Salah satu contoh keterampilan digital adalah ....", a: "cara men-tweet di Tweeter"},
+        {m: 1, q: "Dalam proses dan perkembangan pembelajaran di era digital mahasiswa sebagai agen perubahan dapat mengambil peran sebagai ....", a: "peneliti"},
+
+        // MODUL 2
+        {m: 2, q: "Munculnya pembelajaran digital pada umumnya disebabkan terutama oleh perkembangan ....", a: "teknologi informasi dan komunikasi"},
+        {m: 2, q: "Pembelajaran digital sangat relevan dengan kondisi pendidikan tinggi yang saat ini antara lain ....", a: "biaya pendidikan yang semakin tinggi"},
+        {m: 2, q: "Munculnya massive open online courses (MOOCs) antara lain didorong oleh berkembangnya infrastruktur digital dan telah berkembang menjadi ....", a: "full course"},
+        {m: 2, q: "Berkembangnya pembelajaran online alternatif telah melahirkan berbagai inovasi khususnya berkaitan dengan kredensial alternatif seperti ....", a: "nano degree"},
+        {m: 2, q: "Kredensial alternatif memiliki berbagai keunggulan untuk memenuhi dunia kerja yang cepat berubah dikarenakan ....", a: "flexible"},
+        {m: 2, q: "Pencarian sumber pembelajaran yang bertujuan untuk memperluas hasil pencarian menggunakan metode ....", a: "Pemotongan"},
+        {m: 2, q: "Penggunaan Operator Boolean dengan operator OR akan menghasilkan data pencarian yang ....", a: "Lebih luas"},
+        {m: 2, q: "Pencarian dengan menggunakan mesin pencari dapat menghasilkan data yang sangat luas. Untuk menghasilkan hasil pencarian data yang lebih spesifik dapat menggunakan ....", a: "FRASA"},
+        {m: 2, q: "Penggunaan operator Boolean NOT untuk pencarian database sumber pembelajaran dipergunakan untuk ....", a: "Mengecualikan"},
+        {m: 2, q: "Mesin pencari pada umumnya menggunakan urutan operator Boolean sebagai berikut ....", a: "AND, OR, NOT"},
+        {m: 2, q: "Sebelum Anda membaca materi pelajaran sebaiknya Anda memulainya dengan mengetahui ....", a: "tujuannya"},
+        {m: 2, q: "Menyeleksi bacaan dapat dilakukan melalui antara lain kecuali ....", a: "membuat rangkuman setiap materi"},
+        {m: 2, q: "Mencatat materi selama perkuliahan/tutorial sangat penting, dikarenakan ....", a: "membantu Anda mengidentifikasi topik utama"},
+        {m: 2, q: "Catatan perkuliahan/tutorial sangat penting untuk mahasiswa dikarenakan catatan berisikan, kecuali ....", a: "ringkasan"},
+        {m: 2, q: "Huruf Q pada metode SQW3R berfungsi untuk ....", a: "memfokuskan pada materi yang ingin diketahui"},
+        {m: 2, q: "Tulisan reflektif memungkinkan berisikan berbagai unsur umum, lain tulisan yang bersifat ....", a: "Deskriptif"},
+        {m: 2, q: "Mencatat perkuliahan atau presentasi menggunakan komputer akan lebih mudah, hal ini disebabkan oleh beberapa faktor kecuali ....", a: "Fleksibel"},
+        {m: 2, q: "Mencatat atau note taking merupakan kegiatan perkuliahan yang sangat penting, karena mencatat ....", a: "membantu konsentrasi"},
+        {m: 2, q: "Salah satu pembelajaran digital alternatif yang muncul saat ini adalah ....", a: "MOOCs"},
+        {m: 2, q: "Catatan yang berisikan interaksi dan komunikasi Anda pada saat mengikuti pembelajaran dengan teman Anda disebut sebagai ....", a: "Buku harian pembelajaran"},
+
+        // MODUL 3
+        {m: 3, q: "Jenis teknologi yang tercepat untuk mencapai angka seratus juta pengguaan adalah ....", a: "Internet (WWW)"},
+        {m: 3, q: "Media dapat bertindak sebagai batu loncatan untuk imaginasi kita dan sumber fantasi sehingga media dikatakan mempunyai fungsi sebagai ....", a: "hiburan"},
+        {m: 3, q: "Keunggulan televisi mampu menyajikan informasi dalam waktu yang cepat, hal ini berarti cerita yang dibahas di televisi ....", a: "kurang mendalam"},
+        {m: 3, q: "Teknologi yang terkait dengan media yang dianggap mengantar pergerakan budaya besar-besaran seperti Renaisans Eropa adalah teknologi ....", a: "mesin cetak"},
+        {m: 3, q: "Terjadinya tingkat meledaknya konsumerisme besar-besaran seiring dengan meledaknya popularitas media ....", a: "radio"},
+        {m: 3, q: "Istilah yang digunakan untuk mengategorikan tindakan komunikasi satu-ke-banyak dan banyak-ke-banyak ....", a: "komunikasi massa"},
+        {m: 3, q: "Aspen mendefinisikan literasi media yang pertama kali diterbitkan tahun ....", a: "1992"},
+        {m: 3, q: "Satu pernyataan yang benar tentang definisi literasi media yang diperluas untuk abad ke-21?", a: "literasi media membangun pemahaman tentang peran media dalam masyarakat."},
+        {m: 3, q: "Salah satu indikasi bahwa siaran pers tersebut kurang kredible adalah ....", a: "siaran pers mirip dengan promosi produk atau sales pitch"},
+        {m: 3, q: "Siaran pers defensif terkadang diperlukan hanya untuk menangani informasi yang ....", a: "negatif"},
+
+        // MODUL 4
+        {m: 4, q: "Berikut ini yang merupakan perbedaan antara media lama dengan media baru adalah ....", a: "media baru memungkinkan pemirsanya untuk berpartisipasi aktif"},
+        {m: 4, q: "Salah satu alasan mengapa media cenderung memberitakan kekerasan adalah ....", a: "kasus kekerasan biasanya tidak memiliki analisis lanjut, yang penting diberitakan begitu saja asal pembaca tertarik"},
+        {m: 4, q: "Salah satu jenis pembaca dalam menyikapi sebuah pemberitaan media adalah oppositional reader, yaitu ....", a: "pembaca yang selalu menolak segala pemberitaan media terutama nilai-nilai yang ditransmisikan oleh media"},
+        {m: 4, q: "Tokoh yang menyatakan bahwa semua revolusi komunikasi telah menciptakan pergolakan dan telah mengubah standar literasi dan komunikasi adalah ....", a: "Baron"},
+        {m: 4, q: "Istilah yang digunakan untuk menggambarkan cara konsumen media di negara Eropa Timur dalam menyaring informasi setelah Perang Dunia I adalah ....", a: "cyberbalkanization"},
+        {m: 4, q: "Ciri-ciri masyarakat heterogen penerima informasi komunikasi massa adalah di bawah ini, kecuali ....", a: "berasal dari latar belakang pendidikan yang sama"},
+        {m: 4, q: "Pesan-pesan yang disampaikan oleh komunikator ditujukan kepada khalayak luas. Dengan demikian, dapat diartikan bahwa pesan tersebut bersifat ....", a: "umum"},
+        {m: 4, q: "Maksud dari copycats tersebut yaitu ....", a: "peniruan kekerasan oleh pembaca sebagai hasil apa yang dia lihat dalam pemberitaan media"},
+        {m: 4, q: "Dampak berita kekerasan di mana masyarakat terbiasa dengan adanya kekerasan akibat media terlalu sering memberitakan kekerasan, yaitu ....", a: "de sensitizatium effects"},
+        {m: 4, q: "Pengertian komunikasi massa sebagai salah satu komunikasi yang memiliki perbedaaan signifikan dikemukakan oleh ....", a: "Hafied Cangara"},
+        {m: 4, q: "Aplikasi media sosial yang memfasilitasi masyarakat untuk berkomunikasi pesan singkat secara gratis adalah ....", a: "WhatsApp"},
+        {m: 4, q: "Aplikasi media sosial yang berisi konten berupa video adalah ....", a: "Youtube"},
+        {m: 4, q: "Dampak positif yang muncul akibat berkembangnya media sosial, yaitu ....", a: "waktu untuk menyampaikan informasi menjadi lebih cepat"},
+        {m: 4, q: "Selain memberikan dampak positif, media sosial juga memiliki berbagai dampak negatif. Salah satunya adalah ....", a: "berkurangnya interaksi interpersonal atau tatap muka"},
+        {m: 4, q: "Agar penyampaian tips video dapat menyebar secara cepat dan tidak menggunakan banyak biaya, sebaiknya menggunakan aplikasi ....", a: "Youtube"},
+        {m: 4, q: "Aspek penting yang perlu diperhatikan ketika menggunakan media sosial adalah ....", a: "kerahasiaan informasi pribadi"},
+        {m: 4, q: "Salah satu contoh kolaborasi positif yang dapat dilakukan melalui media sosial adalah ....", a: "mempromosikan budaya setempat"},
+        {m: 4, q: "Manfaat media sosial mempertemukan orang dengan ketertarikan yang sama dapat dilihat dari contoh nyata ....", a: "seorang mahasiswa bergabung dalam komunitas pecinta buku"},
+        {m: 4, q: "Platform sosial media menawarkan berbagai tools yang memungkinkan bisnis menyampaikan konten pada sasaran mereka. Manfaat media ini yaitu ....", a: "menjangkau target pasar"},
+        {m: 4, q: "Berikut ini merupakan manfaat media sosial, kecuali ....", a: "penurunan sirkulasi informasi"},
+        {m: 4, q: "Pengguna internet yang biasanya hanya ingin menelusuri informasi disebut ....", a: "citizen"},
+        {m: 4, q: "Di bawah ini yang merupakan salah satu perbedaan antara digital citizen dengan digital journalism adalah digital citizen ....", a: "menelusuri informasi"},
+        {m: 4, q: "Pengguna internet harus menunjukkan rasa hormat, bersikap sopan, dan melindungi hak orang lain; merupakan pilar digital citizenship, yaitu ....", a: "digital literacy"},
+        {m: 4, q: "Pengertian information literacy tersebut adalah ....", a: "kemampuan untuk mengidentifikasi, menemukan, mengevaluasi, dan menggunakan informasi secara efektif dari internet untuk menyelesaikan suatu tugas..."},
+        {m: 4, q: "J.D. Lasica mengategorikan media citizen journalism kedalam 5 tipe, yaitu ....", a: "audience participation"},
+        {m: 4, q: "Dunia maya (cyberspace) merupakan realita yang terselubung secara global. Pernyataan ini dikemukakan oleh ....", a: "Gibson"},
+        {m: 4, q: "Kolaborasi antara jurnalis profesional dengan nonjurnalis yang memiliki kemampuan dalam materi yang dibahas merupakan klasifikasi yang dikemukakan oleh ....", a: "Steve Outing"},
+        {m: 4, q: "Apabila jurnalis warga ingin berbagi informasi berupa tulisan, warga tersebut dapat menggunakan situs social media ....", a: "blog (wordpress, blogspot)"},
+        {m: 4, q: "Situs social media flickr biasanya digunakan oleh masyarakat dengan tujuan ....", a: "berbagi foto"},
+        {m: 4, q: "Citizen journalism dikenal juga dengan istilah di bawah ini, kecuali jurnalisme ....", a: "subjektif"},
+
+        // MODUL 5
+        {m: 5, q: "Literasi informasi pertama kali dikemukakan oleh....", a: "Paul Zurkowski"},
+        {m: 5, q: "Orang yang memiliki keterampilan literasi informasi akan mampu melakukan hal berikut ini, kecuali....", a: "membuat dan menyebarkan informasi untuk mempengaruhi orang lain"},
+        {m: 5, q: "Kegiatan membandingkan, mengelola, menyusun dan menggabungkan informasi untuk membangun suatu produk informasi merupakan tahapan pemecahan masalah Big6, yaitu....", a: "synthesis"},
+        {m: 5, q: "Berikut ini yang termasuk kedalam seven pillars of information literacy model (Sconul) adalah....", a: "construct strategies for locating"},
+        {m: 5, q: "Kemampuan untuk melakukan organisasi, evaluasi, dan menyusun informasi menurut susunan logis, merupakan kemampuan menurut model....", a: "Empowering Eight (E8)"},
+        {m: 5, q: "Tahap pertama dalam 7 tahapan literasi informasi yang diusulkan oleh Christine Bruce adalah the information....", a: "technology conception"},
+        {m: 5, q: "The wisdom conception merupakan salah satu tahapan literasi informasi yang diusulkan oleh Bruce, yaitu tahapan ke-....", a: "7"},
+        {m: 5, q: "Salah satu jenis elemen literasi adalah literasi media, yaitu kemampuan....", a: "untuk memahami dan menggunakan media dalam memperoleh informasi, misalnya melalui televisi, radio, rekaman musik, koran, dan sebagainya"},
+        {m: 5, q: "Kemampuan untuk memahami dan menggunakan segala bentuk gambar, foto, ilustrasi dalam komputer merupakan literasi....", a: "visual"},
+        {m: 5, q: "Berikut ini merupakan keterampilan yang diperlukan untuk menguasai pesan dan media tertentu, kecuali....", a: "mengalokasikan sumber secara intelektual dan fisik, dan menemukan informasi dari berbagai sumber (location and access)"},
+        {m: 5, q: "Situs web Amerika yang dianggap sebagai otoritas utama di bidang kesehatan dan kesejahteraan anak adalah....", a: "American Academy of Pediatrics"},
+        {m: 5, q: "Kegiatan penelusuran sumber informasi sampai ke hulu dengan cara mengakses tautan asli sumber berita dikenal dengan istilah....", a: "GoUpstream"},
+        {m: 5, q: "Media sosial bookmarking yang paling populer adalah....", a: "Pinterest"},
+        {m: 5, q: "Twitter, Scoop.It, Reddit merupakan contoh jenis media sosial....", a: "Bookmarking"},
+        {m: 5, q: "Situs khusus milik Yahoo! yang mengkonsentrasikan diri pada image sharing adalah....", a: "Flickr"},
+        {m: 5, q: "Situs media sosial dengan fitur tertentu yang digunakan untuk menjalin hubungan dan interaksi dengan sesama adalah....", a: "MySpace"},
+        {m: 5, q: "Media sosial memiliki dampak positif sebagai berikut, kecuali....", a: "cara cepat menjadi terkenal"},
+        {m: 5, q: "Salah satu dampak negatif media sosial yang dirasakan oleh masyarakat yaitu....", a: "berkurangnya interaksi langsung, lebih banyak di dunia maya"},
+        {m: 5, q: "Saat ini marak kasus penipuan melalui media sosial. Salah satu ciri akun palsu adalah....", a: "menggunakan foto orang lain untuk nama akun yang berbeda di beberapa jenis media sosial"},
+        {m: 5, q: "Salah satu alasan mengapa berita palsu atau hoax biasanya langsung dipercaya adalah....", a: "berita hoax nampak lebih meyakinkan"},
+        {m: 5, q: "Alasan mahasiswa harus berhati-hati dan lebih baik tidak menggunakan wikipedia sebagai referensi tulisan saintifik adalah ....", a: "bias informasi karena konten dapat diedit oleh siapa pun dan kapan pun"},
+        {m: 5, q: "Faktor yang menjadi kekuatan, kelemahan, dan perbedaan terbesar Wikipedia adalah ....", a: "memiliki basis kontributor besar dan ditulis berdasarkan konsensus, sesuai dengan pedoman dan kebijakan editorial"},
+        {m: 5, q: "Keuntungan penulisan artikel di Wikipedia oleh amatir adalah ....", a: "mereka memiliki lebih banyak waktu luang"},
+        {m: 5, q: "Salah satu prinsip kolaborasi yang dianut dalam penulisan artikel Wikipedia adalah ....", a: "kolaborasi langsung dengan sumber referensi yang berbeda-beda"},
+        {m: 5, q: "Jenis tulisan yang biasanya dimuat di Wikipedia adalah ....", a: "seluruh informasi yang memiliki sumber referensi"},
+        {m: 5, q: "Jumlah referensi minimal yang harus dipenuhi oleh penulis Wikipedia adalah ....", a: "tidak ada aturan pasti yang mengatur hal tersebut"},
+        {m: 5, q: "Alasan mengapa penulis tidak perlu mencantumkan nama pada saat menjadi kontributor Wikipedia adalah ....", a: "artikel dikembangkan secara kolaboratif dan sukarela"},
+        {m: 5, q: "Wikipedia ditulis sesuai dengan lima pilar, di antaranya adalah ....", a: "ditulis dari sudut pandang netral"},
+        {m: 5, q: "Pada awalnya, Wikipedia merupakan proyek pelengkap untuk ....", a: "Nupedia"},
+        {m: 5, q: "Pengertian vandalisme pada Wikipedia adalah ....", a: "penambahan, penghapusan, atau pengubahan isi yang dengan sengaja dilakukan untuk mengurangi kualitas ensiklopedia"},
+
+        // MODUL 6
+        {m: 6, q: "Media diartikan sebagai sarana berkomunikasi dan sumber informasi merupakan pendapat dari ....", a: "Smaldino dkk. (2018)"},
+        {m: 6, q: "Media dapat disebut sebagai 'media pembelajaran' (instructional media) ketika memuat ....", a: "pesan dengan tujuan pembelajaran"},
+        {m: 6, q: "Media digital termasuk kontinu atau diskrit merupakan pembagian media digital berdasarkan ....", a: "waktunya"},
+        {m: 6, q: "Pemilihan media pembelajaran hendaknya mempertimbangkan kesesuaian antara karakteristik siswa dan karakteristik media berdasarkan landasan ....", a: "empiris"},
+        {m: 6, q: "Adobe Premiere biasanya digunakan untuk pembuatan ....", a: "video instruksional"},
+        {m: 6, q: "Sway merupakan aplikasi berbasis web dari perusahaan ....", a: "Microsoft"},
+        {m: 6, q: "Fungsi utama dari Sway adalah ....", a: "presentasi digital online"},
+        {m: 6, q: "Langkah awal yang digunakan untuk membuat presentasi dengan Sway tanpa menggunakan template adalah memilih menu ....", a: "new blank Sway"},
+        {m: 6, q: "Jika Anda sudah memiliki dokumen yang berisi artikel, maka untuk membuat storyline, Anda harus memilih menu ....", a: "Start from a document"},
+        {m: 6, q: "Menu design digunakan untuk ....", a: "menampilkan hasil pengembangan storyline"},
+
+        // MODUL 7
+        {m: 7, q: "Pergerakan komunitas global yang bertujuan untuk memberikan akses tak terbatas terhadap output/hasil penelitian ilmiah merupakan dimensi dari ....", a: "open access"},
+        {m: 7, q: "Gerakan global yang telah menghasilkan banyak perangkat lunak terbuka dan tanpa biaya adalah ....", a: "open source software"},
+        {m: 7, q: "Eric Hoffer, seorang filsuf Amerika, mengatakan bahwa orang 'kaya' adalah orang yang ....", a: "memiliki kebebasan dan kepercayaan diri tanpa mengambil kebebasan dan kepercayaan diri orang lain"},
+        {m: 7, q: "Ekspresi yang menyiratkan spirit/semangat untuk berkolaborasi yang difasilitasi teknologi internet yang bersifat terbuka disebut ....", a: "kebebasan digital"},
+        {m: 7, q: "Prinsip kunci FOSS (Free and Open Source Software) terletak pada ....", a: "pemberian sumber kodifikasi (source code) program pada pengguna"},
+        {m: 7, q: "Kerangka 5R yang diperkenalkan David Wiley merupakan pengguna karya untuk ....", a: "memiliki, menggunakan, memodifikasi, menggabungkan, mendistribusi ulang karya"},
+        {m: 7, q: "OER merupakan materi yang ....", a: "disebarkan dengan lisensi terbuka"},
+        {m: 7, q: "Dimensi 'nilai pendidikan' suatu OER mengandung dua subdimensi, yaitu ....", a: "biaya dan penggunaan"},
+        {m: 7, q: "Dimensi 'teknologi' pada OER memastikan bahwa pengguna harus bisa ....", a: "mengedit OER"},
+        {m: 7, q: "Praktik pembelajaran yang hanya mungkin dilakukan dengan memanfaatkan kerangka 5R disebut ....", a: "pedagogi berbasis OER"},
+
+        // MODUL 8
+        {m: 8, q: "Tujuan asli suatu 'Hak Cipta' menurut Lawrence Lessig adalah untuk ....", a: "mempromosikan kemajuan sains dan seni bermanfaat"},
+        {m: 8, q: "Hak Cipta adalah konsep hukum untuk memberikan hak kepemilikan dan perlindungan kepada ....", a: "pencipta"},
+        {m: 8, q: "Suatu karya yang sama sekali tidak dilindungi oleh hak kekayaan intelektual dan tersedia untuk digunakan oleh semua anggota masyarakat disebut karya ....", a: "berlisensi terbuka"},
+        {m: 8, q: "Hak eksklusif yang diberikan oleh produk hukum 'hak cipta' meliputi ....", a: "hak ekonomi, hak moral, hak terkait, dan pengalihan hak"},
+        {m: 8, q: "Masa berlaku 'Hak Cipta' adalah ....", a: "terbatas untuk waktu tertentu"},
+        {m: 8, q: "Creative Commons merupakan perangkat hukum yang membantu pencipta untuk ....", a: "mendistribusikan/membagikan karya ciptanya"},
+        {m: 8, q: "Creative Commons yang menyatakan pengguna boleh menggunakan suatu karya cipta untuk kepentingan komersial dari CC dibawah ini adalah ....", a: "CC BY"},
+        {m: 8, q: "Memperhatikan definisi OER, maka unsur lisensi Creative Commons yang tidak bisa digunakan jika karya kita ingin dijadikan OER adalah unsur ....", a: "TanpaTurunan (ND)"},
+        {m: 8, q: "Karya dengan lisensi CC yang sama sekali tidak dapat digabungkan dengan karya berlisensi CC lainnya adalah ....", a: "CC BY-ND dan CC BY-NC-ND"},
+        {m: 8, q: "Perbedaan prinsip pokok 'Hak Cipta' dengan CC adalah ....", a: "semua benar (mengubah 'siapa' yang dilindungi, memberikan kebebasan, mengubah dari seluruh hak dilindungi menjadi sebagian hak dilindungi)"},
+
+        // MODUL 9
+        {m: 9, q: "Warga digital memerlukan literasi tertentu yang memungkinkan mereka dapat beradaptasi dengan dunia digital secara aman. Literasi apa saja yang diperlukan, kecuali ....", a: "literasi kemanusiaan"},
+        {m: 9, q: "Warga digital harus memiliki sikap hormat terhadap orang lain dan menjadi pelindung hak semua orang bersama sama berperilaku etis dan sesuai dengan norma social online, literasi ini termasuk sebagai ....", a: "kesantunan digital"},
+        {m: 9, q: "Pemahaman teknologi digital merupakan bagian dari literasi kecakapan digital yang meliputi antara lain ....", a: "mengetahui akibat dari keputusan online"},
+        {m: 9, q: "Atribut warga digital yang berkaitan dengan bagaimana sebaiknya warga digital berinteraksi dengan media digital termasuk dalam atribut ....", a: "kesehatan dan kesejahteraan digital"},
+        {m: 9, q: "Atribut warga digital yang berusaha untuk mencegah agar mereka tidak terjerumus dalam cyberbullying atau hoax termasuk dalam atribut ....", a: "hukum digital"},
+        {m: 9, q: "Permasalahan psikologis yang muncul disebabkan karena Anda percaya terhadap penyakit yang Anda baca secara online disebut sebagai ....", a: "Cyberchondria"},
+        {m: 9, q: "Manakah dari istilah berikut yang paling menggambarkan praktik online memposting komentar online dengan tujuan mengecewakan orang lain untuk membangkitkan respons emosional ....", a: "Troll Internet"},
+        {m: 9, q: "Praktik Troll dengan memposting panjang dan menulis banyak paragraf tentang apa pun yang mereka ketahui, apakah ada yang membacanya atau tidak, paling baik dijelaskan dengan istilah berikut ....", a: "Blabbermouth"},
+        {m: 9, q: "Penghilangan hambatan sistemik yang ditimbulkan pada seseorang yang berkaitan dengan akses Internet sebagai salah satu bentuk dari prinsip ....", a: "Equity"},
+        {m: 9, q: "Mencuri foto daring seseorang dan kemudian membuat akun media sosial fiktif untuk keuntungan pribadi, paling baik dijelaskan oleh konsep berikut ....", a: "Catfishing"}
+    ];
+
+    const container = document.getElementById('quiz-container');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    function renderCards(moduleFilter) {
+        container.innerHTML = ''; // Bersihkan container
+        let count = 0;
+
+        dataSoal.forEach((item, index) => {
+            if (moduleFilter === 0 || item.m === moduleFilter) {
+                count++;
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                card.onclick = function() {
+                    const answerDiv = this.querySelector('.answer');
+                    if (answerDiv.classList.contains('show')) {
+                        answerDiv.classList.remove('show');
+                    } else {
+                        answerDiv.classList.add('show');
+                    }
+                };
+
+                card.innerHTML = `
+                    <span class="module-badge">Modul ${item.m}</span>
+                    <p class="question">${count}. ${item.q}</p>
+                    <p class="hint">Klik untuk melihat jawaban...</p>
+                    <div class="answer"><strong>Jawaban:</strong> ${item.a}</div>
+                `;
+                container.appendChild(card);
+            }
+        });
+    }
+
+    function filterBy(modulNum) {
+        // Ganti status aktif tombol
+        buttons.forEach((btn, index) => {
+            if (index === modulNum) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        // Tampilkan soal sesuai filter
+        renderCards(modulNum);
+    }
+
+    // Tampilkan semua soal saat pertama kali dibuka
+    renderCards(0);
+</script>
+
+</body>
+</html>
